@@ -10,7 +10,9 @@ function Dashboard() {
 
   const openBugs = bugs.filter((bug) => bug.status === "Open").length;
 
-  const resolvedBugs = bugs.filter((bug) => bug.status === "Resolved").length;
+    const inProgressBugs = bugs.filter(
+      (bug) => bug.status === "In Progress",
+    ).length;
 
   const fetchBugs = async () => {
     try {

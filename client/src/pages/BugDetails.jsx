@@ -9,16 +9,19 @@ function BugDetails() {
   const [bug, setBug] = useState(null);
   const [status, setStatus] = useState("");
 
-  const fetchBug = async () => {
-    try {
-      const response = await api.get(`/bugs/${id}`);
+    useEffect(() => {
+      const fetchBug = async () => {
+        try {
+          const response = await api.get(`/bugs/${id}`);
+          setBug(response.data);
+          setStatus(response.data.status);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-      setBug(response.data);
-      setStatus(response.data.status);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      fetchBug();
+    }, [id]);
 
   useEffect(() => {
     fetchBug();
