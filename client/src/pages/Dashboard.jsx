@@ -14,6 +14,10 @@ function Dashboard() {
       (bug) => bug.status === "In Progress",
     ).length;
 
+    const resolvedBugs = bugs.filter(
+      (bug) => bug.status === "Resolved",
+    ).length;
+
   const fetchBugs = async () => {
     try {
       const response = await api.get("/bugs");
