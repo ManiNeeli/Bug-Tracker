@@ -9,29 +9,23 @@ function BugDetails() {
   const [bug, setBug] = useState(null);
   const [status, setStatus] = useState("");
 
-    useEffect(() => {
-      const fetchBug = async () => {
-        try {
-          const response = await api.get(`/bugs/${id}`);
-          setBug(response.data);
-          setStatus(response.data.status);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-      fetchBug();
-    }, [id]);
-
   useEffect(() => {
+    const fetchBug = async () => {
+      try {
+        const response = await api.get(`/bugs/${id}`);
+        setBug(response.data);
+        setStatus(response.data.status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchBug();
-  }, []);
+  }, [id]);
 
   const updateStatus = async () => {
     try {
-      const response = await api.put(`/bugs/${id}`, {
-        status,
-      });
+      const response = await api.put(`/bugs/${id}`, { status });
 
       setBug(response.data);
 
@@ -72,9 +66,7 @@ function BugDetails() {
             className="border p-2 rounded"
           >
             <option value="Open">Open</option>
-
             <option value="In Progress">In Progress</option>
-
             <option value="Resolved">Resolved</option>
           </select>
 
