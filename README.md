@@ -1,75 +1,70 @@
 # AI Bug Tracker
 
-AI Bug Tracker is a full-stack bug management application built using React, Node.js, Express, and MongoDB.
+A full-stack bug tracker that uses Google Gemini to automatically set each bug's priority, category and a suggested fix.
 
 ## Features
 
-- Create Bug Reports
-- View All Bugs
-- View Bug Details
-- Update Bug Status
-- Delete Bug Reports
-- Dashboard Analytics
-- MongoDB Database Integration
-- REST API Architecture
-- Gemini AI Integration
+- Register / login with JWT authentication
+- Create, view, edit and delete bugs
+- AI analysis on create, plus a "Re-run AI" button
+- Search and filter by status, priority and category
+- Dashboard statistics and color badges
+- Rate limiting, Helmet and restricted CORS
 
 ## Tech Stack
 
-### Frontend
-- React.js
-- Vite
-- Tailwind CSS
-- Axios
-- React Router
+- **Frontend:** React, Vite, Tailwind CSS, React Router, Axios
+- **Backend:** Node.js, Express, Mongoose
+- **Database:** MongoDB Atlas
+- **AI:** Google Gemini API
+
+## Setup
 
 ### Backend
-- Node.js
-- Express.js
-
-### Database
-- MongoDB Atlas
-
-### AI
-- Google Gemini API
-
-## Project Structure
-
-```text
-client/
-server/
-README.md
+```bash
+cd server
+npm install
+cp .env.example .env   # fill in your values
+npm run dev
 ```
 
-## Installation
-
 ### Frontend
-
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-### Backend
+## Environment variables (`server/.env`)
 
-```bash
-cd server
-npm install
-npm run dev
-```
+| Variable | Description |
+|---|---|
+| `PORT` | Server port (default 5000) |
+| `MONGO_URI` | MongoDB connection string |
+| `JWT_SECRET` | Long random string for signing tokens |
+| `GEMINI_API_KEY` | Key from Google AI Studio |
+| `GEMINI_MODEL` | Primary Gemini model |
+| `GEMINI_FALLBACK_MODEL` | Fallback if the primary is overloaded |
+| `CLIENT_URL` | Allowed frontend origin(s), comma separated |
 
-## Environment Variables
+Client (optional): `VITE_API_URL` (defaults to `http://localhost:5000/api`).
 
-Create:
+## API
 
-```env
-PORT=5000
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Create account |
+| POST | `/api/auth/login` | Log in |
+| GET | `/api/auth/me` | Current user |
+| GET | `/api/bugs` | List bugs (`search`, `status`, `priority`, `category`) |
+| GET | `/api/bugs/stats` | Dashboard counts |
+| GET | `/api/bugs/:id` | One bug |
+| POST | `/api/bugs` | Create bug (runs AI) |
+| POST | `/api/bugs/:id/analyze` | Re-run AI |
+| PUT | `/api/bugs/:id` | Update bug |
+| DELETE | `/api/bugs/:id` | Delete bug |
 
-MONGO_URI=YOUR_MONGODB_URI
-
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-```
+All `/api/bugs` routes require `Authorization: Bearer <token>`.
 
 ## Author
 

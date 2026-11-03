@@ -2,6 +2,7 @@ require("dotenv").config(); // MUST be the first line
 
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 
 const connectDB = require("./config/db");
 const bugRoutes = require("./routes/bugRoutes");
@@ -11,8 +12,15 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.set("trust proxy", 1); // needed behind Render's proxy so rate limits see real IPs
+
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((o) => o.trim());
+
+app.use(helmet());
+app.use(cors({ origin: allowedOrigins }));
+app.use(express.json({ limit: "100kb" }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/bugs", bugRoutes);
