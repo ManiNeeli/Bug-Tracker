@@ -10,11 +10,11 @@ const authRoutes = require("./routes/authRoutes");
 connectDB();
 
 const app = express();
-app.use("/api/auth", authRoutes);
 
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
 app.use("/api/bugs", bugRoutes);
 
 app.get("/", (req, res) => {

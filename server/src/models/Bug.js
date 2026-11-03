@@ -28,6 +28,7 @@ const bugSchema = new mongoose.Schema(
       default: "General",
     },
     aiSuggestion: { type: String, default: "" },
+    reporter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true },
 );
