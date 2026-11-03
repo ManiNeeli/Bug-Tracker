@@ -31,8 +31,10 @@ const createBug = async (req, res) => {
       priority: ai.priority,
       category: ai.category,
       aiSuggestion: ai.suggestion,
+      reporter: req.user._id,
     });
 
+    await bug.populate("reporter", "name");
     res.status(201).json(bug);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -40,7 +42,6 @@ const createBug = async (req, res) => {
 };
 
 // Get bugs with optional search + filters
-// GET /api/bugs?search=login&status=Open&priority=High&category=UI
 const getBugs = async (req, res) => {
   try {
     const { search, status, priority, category } = req.query;
@@ -55,14 +56,16 @@ const getBugs = async (req, res) => {
       filter.$or = [{ title: regex }, { description: regex }];
     }
 
-    const bugs = await Bug.find(filter).sort({ createdAt: -1 });
+    const bugs = await Bug.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("reporter", "name");
     res.json(bugs);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Stats for dashboard (not affected by filters)
+// Stats for dashboard
 const getStats = async (req, res) => {
   try {
     const countBy = async (field) => {
@@ -92,7 +95,7 @@ const getBugById = async (req, res) => {
       return res.status(400).json({ message: "Invalid bug id" });
     }
 
-    const bug = await Bug.findById(req.params.id);
+    const bug = await Bug.findById(req.params.id).populate("reporter", "name");
     if (!bug) return res.status(404).json({ message: "Bug not found" });
 
     res.json(bug);
@@ -117,7 +120,7 @@ const updateBug = async (req, res) => {
     const bug = await Bug.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
-    });
+    }).populate("reporter", "name");
 
     if (!bug) return res.status(404).json({ message: "Bug not found" });
 
@@ -151,6 +154,7 @@ const reanalyzeBug = async (req, res) => {
     bug.category = ai.category;
     bug.aiSuggestion = ai.suggestion;
     await bug.save();
+    await bug.populate("reporter", "name");
 
     res.json(bug);
   } catch (error) {

@@ -5,10 +5,12 @@ const cors = require("cors");
 
 const connectDB = require("./config/db");
 const bugRoutes = require("./routes/bugRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 connectDB();
 
 const app = express();
+app.use("/api/auth", authRoutes);
 
 app.use(cors());
 app.use(express.json());

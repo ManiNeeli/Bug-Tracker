@@ -120,6 +120,10 @@ function BugDetails() {
           <strong>Created:</strong> {new Date(bug.createdAt).toLocaleString()}
         </p>
 
+        <p className="mb-2">
+          <strong>Reported by:</strong> {bug.reporter?.name || "Unknown"}
+        </p>
+
         <div className="mt-6 bg-blue-50 border border-blue-200 p-4 rounded">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-bold text-blue-700">AI Analysis</h3>
